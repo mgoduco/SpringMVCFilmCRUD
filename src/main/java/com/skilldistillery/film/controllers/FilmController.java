@@ -87,6 +87,21 @@ public class FilmController {
 		return mv;
 	}
 
+	@RequestMapping(path = "updateFilm.do", method = RequestMethod.POST)
+	public String updateFilm(String title, String description, short release_year, int language_id, int rental_duration,
+			double rental_rate, int length, double replacement_cost, String rating, String special_features,
+			RedirectAttributes redir) throws SQLException {
+
+		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
+				replacement_cost, rating, special_features);
+
+		film = db.saveFilm(title, description, release_year, language_id, rental_duration, rental_rate, length,
+				replacement_cost, rating, special_features);
+
+		redir.addFlashAttribute("film", film);
+		return "redirect:updateFilm.do";
+	}
+
 	@RequestMapping(path = "displayFilm.do", method = RequestMethod.GET)
 	private ModelAndView displayFilm() {
 		ModelAndView mv = new ModelAndView();

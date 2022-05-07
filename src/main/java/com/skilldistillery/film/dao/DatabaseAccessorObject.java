@@ -81,34 +81,39 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	// Modify createFilm() so it retrieves the ID of the newly-inserted film object,
 	// and assigns it to the original Film object before returning it.
 	//
-	public boolean saveFilm(Film film) {
+	@Override
+	public Film saveFilm(String title, String description, short release_year, int language_id, int rental_duration,
+			double rental_rate, int length, double replacement_cost, String rating, String special_features) {
 		Connection conn = null;
+		Film filmToUpdate = new Film(title, description, release_year, language_id, rental_duration, rental_rate,
+				length, replacement_cost, rating, special_features);
+
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
 			String sql = "UPDATE film SET ? " + " WHERE id=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, film.getTitle());
-			stmt.setString(2, film.getDesc());
-			stmt.setShort(3, film.getReleaseYear());
-			stmt.setInt(4, film.getLangId());
-			stmt.setInt(5, film.getRentDur());
-			stmt.setDouble(6, film.getRate());
-			stmt.setInt(7, film.getLength());
-			stmt.setDouble(8, film.getRepCost());
-			stmt.setString(9, film.getRating());
-			stmt.setString(10, film.getFeatures());
+			stmt.setString(1, filmToUpdate.getTitle());
+			stmt.setString(2, filmToUpdate.getDesc());
+			stmt.setShort(3, filmToUpdate.getReleaseYear());
+			stmt.setInt(4, filmToUpdate.getLangId());
+			stmt.setInt(5, filmToUpdate.getRentDur());
+			stmt.setDouble(6, filmToUpdate.getRate());
+			stmt.setInt(7, filmToUpdate.getLength());
+			stmt.setDouble(8, filmToUpdate.getRepCost());
+			stmt.setString(9, filmToUpdate.getRating());
+			stmt.setString(10, filmToUpdate.getFeatures());
 			int updateCount = stmt.executeUpdate();
 			if (updateCount == 1) {
 				// Replace actor's film list
 				sql = "DELETE FROM film WHERE film_id = ?";
 				stmt = conn.prepareStatement(sql);
-				stmt.setInt(1, film.getFilmId());
+				stmt.setInt(1, filmToUpdate.getFilmId());
 				updateCount = stmt.executeUpdate();
 				sql = "INSERT INTO film (film_id) VALUES = ?";
 				stmt = conn.prepareStatement(sql);
-				for (Actor actor : film.getActorList()) {
-					stmt.setInt(1, film.getFilmId());
+				for (Actor actor : filmToUpdate.getActorList()) {
+					stmt.setInt(1, filmToUpdate.getFilmId());
 					updateCount = stmt.executeUpdate();
 				}
 				conn.commit(); // COMMIT TRANSACTION
@@ -123,9 +128,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					System.err.println("Error trying to rollback");
 				}
 			}
-			return false;
+			return null;
 		}
-		return true;
+		return filmToUpdate;
 	}
 
 	// Make sure your existing Film class and DAO film query methods include film.id
