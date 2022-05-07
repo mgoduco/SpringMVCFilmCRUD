@@ -26,6 +26,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 	}
 
+	// Use the user's input to create a new Film object, passing it to your DAO's
+	// createFilm(), then prints the added film.
+	//
 	@Override
 	public Film createFilm(Film film) {
 		Connection conn = null;
@@ -82,6 +85,89 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return film;
 	}
 
+	// Modify createFilm() so it retrieves the ID of the newly-inserted film object,
+	// and assigns it to the original Film object before returning it.
+	//
+	public boolean saveFilm(Film film) {
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(URL, user, pass);
+			conn.setAutoCommit(false); // START TRANSACTION
+			String sql = "UPDATE actor SET first_name=?, last_name=? " + " WHERE id=?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, film.getTitle());
+			stmt.setString(2, film.getDesc());
+			stmt.setShort(3, film.getReleaseYear());
+			stmt.setInt(4, film.getLangId());
+			stmt.setInt(5, film.getRentDur());
+			stmt.setDouble(6, film.getRate());
+			stmt.setInt(7, film.getLength());
+			stmt.setDouble(8, film.getRepCost());
+			stmt.setString(9, film.getRating());
+			stmt.setString(10, film.getFeatures());
+			int updateCount = stmt.executeUpdate();
+			if (updateCount == 1) {
+				// Replace actor's film list
+				sql = "DELETE FROM film WHERE film_id = ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, film.getFilmId());
+				updateCount = stmt.executeUpdate();
+				sql = "INSERT INTO film (film_id) VALUS = ?";
+				stmt = conn.prepareStatement(sql);
+				for (Actor actor : film.getActorList()) {
+					stmt.setInt(1, film.getFilmId());
+					updateCount = stmt.executeUpdate();
+				}
+				conn.commit(); // COMMIT TRANSACTION
+			}
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			if (conn != null) {
+				try {
+					conn.rollback();
+				} // ROLLBACK TRANSACTION ON ERROR
+				catch (SQLException sqle2) {
+					System.err.println("Error trying to rollback");
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
+	// Make sure your existing Film class and DAO film query methods include film.id
+	// in their SELECTs, and include the id as an attribute in the returned Film
+	// objects.
+	//
+	// Implement deleteFilm() in your DAO that takes a Film as its parameter.
+	public boolean deleteFilm(Film film) {
+
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(URL, user, pass);
+			conn.setAutoCommit(false); // START TRANSACTION
+			String sql = "DELETE FROM film WHERE film_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, film.getFilmId());
+			int updateCount = stmt.executeUpdate();
+			sql = "DELETE FROM film WHERE film_id = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, film.getFilmId());
+			updateCount = stmt.executeUpdate();
+			conn.commit(); // COMMIT TRANSACTION
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			if (conn != null) {
+				try {
+					conn.rollback();
+				} catch (SQLException sqle2) {
+					System.err.println("Error trying to rollback");
+				}
+			}
+			return false;
+		}
+		return true;
+	}
 	@Override
 	public Film findFilmById(int filmId) {
 		Film film = null;
@@ -203,21 +289,14 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 }
-// Use the user's input to create a new Film object, passing it to your DAO's
-// createFilm(), then prints the added film.
-//
-// Modify createFilm() so it retrieves the ID of the newly-inserted film object,
-// and assigns it to the original Film object before returning it.
-//
-// Make sure your existing Film class and DAO film query methods include film.id
-// in their SELECTs, and include the id as an attribute in the returned Film
-// objects.
-//
-// Implement deleteFilm() in your DAO that takes a Film as its parameter.
+
 //
 // When a film is displayed, the user can choose to delete the film. If they
 // choose this option, the film object is passed to the DAO's deleteFilm.
 //
+
+
+
 // Test this using films you created using createFilm above - you don't need to
 // be able to delete existing films, which have child records referencing them.
 // Implement a film update operation.

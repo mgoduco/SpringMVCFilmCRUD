@@ -1,4 +1,4 @@
-package com.skilldistillery.film.app;
+package com.skilldistillery.film.ignorefiles;
 
 import java.sql.SQLException;
 import java.util.InputMismatchException;
@@ -13,6 +13,7 @@ import com.skilldistillery.film.entities.Film;
 public class FilmQueryApp {
 
 	DatabaseAccessor db = new DatabaseAccessorObject();
+	DatabaseAccessorObject dao = new DatabaseAccessorObject();
 
 	public static void main(String[] args) throws SQLException {
 		FilmQueryApp app = new FilmQueryApp();
@@ -22,8 +23,7 @@ public class FilmQueryApp {
 	}
 
 	private void test() {
-		Film film = db.findFilmById(1001);
-		System.out.println(film);
+	System.out.println(	dao.createFilm(addNewFilm()));
 	}
 
 	private void launch() throws SQLException {
@@ -61,7 +61,7 @@ public class FilmQueryApp {
 				lookUpFilmBySearch(input);
 				break;
 			case 3:
-				addNewFilm(input);
+				addNewFilm();
 				break;
 			case 4:
 				System.out.println("Goodbye");
@@ -113,13 +113,14 @@ public class FilmQueryApp {
 		System.out.println();
 	}
 
-	private void addNewFilm(Scanner input) {
+	private Film addNewFilm() {
 		System.out.println("Adding new film");
 		Film film = new Film();
-		film.setFilmId(1001);
 		film.setTitle("New Film Test");
 		film.setDesc("New Film Test desc");
+		
 
+		return film;
 	}
 
 	private void exit() {
