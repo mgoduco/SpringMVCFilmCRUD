@@ -23,15 +23,21 @@ public class FilmController {
 		return "WEB-INF/views/home.jsp";
 	}
 
-	@RequestMapping(path = "getfilm.do", params = "filmId", method = RequestMethod.GET)
+	@RequestMapping(path = "getFilm.do", params = "filmId", method = RequestMethod.GET)
 	public ModelAndView getFilmById(int filmId) {
-		List<Film> films = new ArrayList<>();
 		ModelAndView mv = new ModelAndView();
-		films.add(db.findFilmById(filmId));
-		mv.addObject("films", films);
-		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		Film film = db.findFilmById(filmId);
+		mv.addObject("film", film);
+		mv.setViewName("WEB-INF/views/getFilm.jsp");
 		return mv;
 	}
+
+	@RequestMapping(path = { "/", "createFilmForm.do" })
+	public String createFilmForm() {
+		return "WEB-INF/views/createFilm.jsp";
+	}
+	
+	
 
 	// TODO A user can choose to add a new film. They can enter all the properties
 	// of the film.

@@ -12,11 +12,11 @@
 <body>
 	<p>
 	<h4>Film By ID Results</h4>
-	<c:if test="${! empty film.filmId }">
-		<li>Film Id: ${film.filmId }</li>
+	<c:if test="${! empty film }">
+		<li>Film Id: ${film }</li>
 		<c:choose>
-			<c:when test="${empty film.filmId }">
-				No film with that id
+			<c:when test="${empty film }">
+				<li>No film with that id</li>
 			</c:when>
 		</c:choose>
 		<ul>
@@ -24,7 +24,12 @@
 			<li>Description: ${ film.desc}</li>
 			<li>Release year: ${ film.releaseYear }</li>
 			<li>Rating: ${ film.rating }</li>
-			<li>Language: ${ film.lang }</li>
+			<li>Rental Duration: ${ film.rentDur }</li>
+			<li>Rental Rate: ${ film.rate }</li>
+			<li>Length: ${ film.length }</li>
+			<li>Replacement Cost: ${ film.repCost }</li>
+			<li>Rating: ${ film.rating }</li>
+			<li>Features: ${ film.features }</li>
 		</ul>
 	</c:if>
 	</p>
