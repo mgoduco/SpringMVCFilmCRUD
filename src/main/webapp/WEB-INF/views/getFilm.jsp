@@ -34,11 +34,12 @@
 		</ul>
 	</c:if>
 	</p>
+	<br>
 	
-	<h3>Delete this film from the database</h3>
-	<input type="submit" value="Delete">
+	DELETE FUNCTION 
 	
 	<br>
+	
 	<a href="home.do">Return to Main Menu</a>
 
 </body>

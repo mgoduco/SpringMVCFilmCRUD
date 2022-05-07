@@ -28,10 +28,12 @@
 		<input type="text" name="replacement_cost" value="18.99"> <br>
 		<label for="rating">rating:</label> <input type="text" name="rating"
 			value="R"> <br> <label for="special_features">special_features:</label>
-		<input type="text" name="special_features" value="special_features">
+		<input type="text" name="special_features" value="Trailers">
 		<br> <input type="submit" value="Create new film">
 
 	</form>
+	
+<%-- 	<ul>
 	<li>Title: ${ film.title}</li>
 	<li>Description: ${ film.desc}</li>
 	<li>Release year: ${ film.releaseYear }</li>
@@ -42,7 +44,8 @@
 	<li>Replacement Cost: ${ film.repCost }</li>
 	<li>Rating: ${ film.rating }</li>
 	<li>Features: ${ film.features }</li>
-
+	</ul> --%>
+	
 	<a href="home.do">Return to Main Menu</a>
 
 </body>
