@@ -35,10 +35,11 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
-			
+
 			String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features)"
 					+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+//			PreparedStatement stmt = conn.prepareStatement(sql);
 
 			stmt.setString(1, film.getTitle());
 			stmt.setString(2, film.getDesc());
@@ -50,28 +51,19 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			stmt.setDouble(8, film.getRepCost());
 			stmt.setString(9, film.getRating());
 			stmt.setString(10, film.getFeatures());
-
-			int updateCount = stmt.executeUpdate();
-			if (updateCount == 1) {
-				ResultSet keys = stmt.getGeneratedKeys();
-				if (keys.next()) {
-					int newFilmId = keys.getInt(1);
-					film.setFilmId(newFilmId);
-					if (film.getFilms() != null && film.getFilms().size() > 0) {
-						sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features, id, language_name) "
-								+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
-						stmt = conn.prepareStatement(sql);
-						for (Film films : film.getFilms()) {
-							stmt.setInt(1, films.getFilmId());
-							stmt.setInt(2, newFilmId);
-							updateCount = stmt.executeUpdate();
-						}
-					}
-				}
-			} else {
-				film = null;
+			try {
+				int updateCount = stmt.executeUpdate();
+				conn.commit(); // COMMIT TRANSACTION
+				System.out.println(updateCount + " added new film");
+				ResultSet rs = stmt.getGeneratedKeys();
+				while(rs.next()) {
+					System.out.println("New film: " + rs.getInt(1));
+				} 
+			} catch (SQLException e) {
+				System.err.println("Error creating film");
+				e.getErrorCode();
 			}
-			conn.commit(); // COMMIT TRANSACTION
+//		
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 			if (conn != null) {
@@ -169,6 +161,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 		return true;
 	}
+
 	@Override
 	public Film findFilmById(int filmId) {
 		Film film = null;
@@ -290,13 +283,29 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 }
-
+//if (updateCount == 1) {
+//	ResultSet keys = stmt.getGeneratedKeys();
+//	if (keys.next()) {
+//		int newFilmId = keys.getInt(1);
+//		film.setFilmId(newFilmId);
+//		if (film.getFilms() != null && film.getFilms().size() > 0) {
+//			sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features)"
+//					+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
+//			stmt = conn.prepareStatement(sql);
+//			for (Film films : film.getFilms()) {
+//				stmt.setInt(1, films.getFilmId());
+//				stmt.setInt(2, newFilmId);
+//				updateCount = stmt.executeUpdate();
+//			}
+//		}
+//	}
+//} else {
+//	film = null;
+//}
 //
 // When a film is displayed, the user can choose to delete the film. If they
 // choose this option, the film object is passed to the DAO's deleteFilm.
 //
-
-
 
 // Test this using films you created using createFilm above - you don't need to
 // be able to delete existing films, which have child records referencing them.
