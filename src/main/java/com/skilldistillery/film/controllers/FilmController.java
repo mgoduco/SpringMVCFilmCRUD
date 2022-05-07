@@ -28,7 +28,7 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();
 		Film film = db.findFilmById(filmId);
 		mv.addObject("film", film);
-		mv.setViewName("WEB-INF/views/getFilm.jsp");
+		mv.setViewName("WEB-INF/views/getfilm.jsp");
 		return mv;
 	}
 
@@ -62,7 +62,7 @@ public class FilmController {
 	@RequestMapping(path = "displayFilm.do", method = RequestMethod.GET)
 	private ModelAndView displayFilm() {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("WEB-INF/views/getFilm.jsp");
+		mv.setViewName("WEB-INF/views/getfilm.jsp");
 		return mv;
 	}
 
