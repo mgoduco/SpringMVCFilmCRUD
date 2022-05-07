@@ -10,10 +10,12 @@ public interface DatabaseAccessor {
 
 	public Film findFilmById(int filmId);
 
-	public void createFilm(Film film) throws SQLException;
+	public Film createFilm(Film film) throws SQLException;
 
-	public List<Film> findFilmByKeyword(String keyword);
+	public List<Film> findFilmByKeyword(String keyword) throws SQLException;
 
 	public List<Actor> findActorsByFilmId(int filmId);
+
+	public Actor findActorById(int actorId);
 
 }

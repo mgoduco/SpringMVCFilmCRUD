@@ -1,28 +1,31 @@
 package com.skilldistillery.film.entities;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Film {
-
-	private int id;
+	private int filmId;
 	private String title;
 	private String desc;
-	private Integer releaseYear;
+	private short releaseYear;
 	private int langId;
+	private String langName;
 	private int rentDur;
 	private double rate;
-	private Integer length;
+	private int length;
 	private double repCost;
 	private String rating;
 	private String features;
-	private String language;
-	private List<Actor> actors;
+	private List<Actor> actorList;
+	private List<Film> films;
 
-	public Film(int id, String title, String desc, Integer releaseYear, int langId, int rentDur, double rate,
-			Integer length, double repCost, String rating, String features, String language, List<Actor> actors) {
+	public Film() {
+
+	}
+
+	public Film(int filmId, String title, String desc, short releaseYear, int langId, int rentDur, double rate,
+			int length, double repCost, String rating, String features) {
 		super();
-		this.id = id;
+		this.filmId = filmId;
 		this.title = title;
 		this.desc = desc;
 		this.releaseYear = releaseYear;
@@ -33,20 +36,39 @@ public class Film {
 		this.repCost = repCost;
 		this.rating = rating;
 		this.features = features;
-		this.language = language;
-		this.actors = actors;
 	}
 
-	public Film() {
-		// TODO Auto-generated constructor stub
+	public Film(int filmId, String title, String desc, short releaseYear, int langId, int rentDur, double rate,
+			int length, double repCost, String rating, String features, List<Actor> actorList) {
+		super();
+		this.filmId = filmId;
+		this.title = title;
+		this.desc = desc;
+		this.releaseYear = releaseYear;
+		this.langId = langId;
+		this.rentDur = rentDur;
+		this.rate = rate;
+		this.length = length;
+		this.repCost = repCost;
+		this.rating = rating;
+		this.features = features;
+		this.actorList = actorList;
 	}
 
-	public int getId() {
-		return id;
+	public List<Film> getFilms() {
+		return films;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setFilms(List<Film> films) {
+		this.films = films;
+	}
+
+	public int getFilmId() {
+		return filmId;
+	}
+
+	public void setFilmId(int filmId) {
+		this.filmId = filmId;
 	}
 
 	public String getTitle() {
@@ -65,11 +87,11 @@ public class Film {
 		this.desc = desc;
 	}
 
-	public Integer getReleaseYear() {
+	public short getReleaseYear() {
 		return releaseYear;
 	}
 
-	public void setReleaseYear(Integer releaseYear) {
+	public void setReleaseYear(short releaseYear) {
 		this.releaseYear = releaseYear;
 	}
 
@@ -79,6 +101,14 @@ public class Film {
 
 	public void setLangId(int langId) {
 		this.langId = langId;
+	}
+
+	public String getLangName() {
+		return langName;
+	}
+
+	public void setLangName(String langName) {
+		this.langName = langName;
 	}
 
 	public int getRentDur() {
@@ -97,11 +127,11 @@ public class Film {
 		this.rate = rate;
 	}
 
-	public Integer getLength() {
+	public int getLength() {
 		return length;
 	}
 
-	public void setLength(Integer length) {
+	public void setLength(int length) {
 		this.length = length;
 	}
 
@@ -129,26 +159,34 @@ public class Film {
 		this.features = features;
 	}
 
-	public String getLanguage() {
-		return language;
+	public List<Actor> getActorList() {
+		return actorList;
 	}
 
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-
-	public List<Actor> getActors() {
-		return actors;
-	}
-
-	public void setActors(List<Actor> actors) {
-		this.actors = actors;
+	public void setActorList(List<Actor> actorList) {
+		this.actorList = actorList;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(actors, desc, features, id, langId, language, length, rate, rating, releaseYear, rentDur,
-				repCost, title);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((actorList == null) ? 0 : actorList.hashCode());
+		result = prime * result + ((desc == null) ? 0 : desc.hashCode());
+		result = prime * result + ((features == null) ? 0 : features.hashCode());
+		result = prime * result + filmId;
+		result = prime * result + langId;
+		result = prime * result + length;
+		long temp;
+		temp = Double.doubleToLongBits(rate);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
+		result = prime * result + releaseYear;
+		result = prime * result + rentDur;
+		temp = Double.doubleToLongBits(repCost);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
 	}
 
 	@Override
@@ -160,20 +198,53 @@ public class Film {
 		if (getClass() != obj.getClass())
 			return false;
 		Film other = (Film) obj;
-		return Objects.equals(actors, other.actors) && Objects.equals(desc, other.desc)
-				&& Objects.equals(features, other.features) && id == other.id && langId == other.langId
-				&& Objects.equals(language, other.language) && Objects.equals(length, other.length)
-				&& Double.doubleToLongBits(rate) == Double.doubleToLongBits(other.rate)
-				&& Objects.equals(rating, other.rating) && Objects.equals(releaseYear, other.releaseYear)
-				&& rentDur == other.rentDur
-				&& Double.doubleToLongBits(repCost) == Double.doubleToLongBits(other.repCost)
-				&& Objects.equals(title, other.title);
+		if (actorList == null) {
+			if (other.actorList != null)
+				return false;
+		} else if (!actorList.equals(other.actorList))
+			return false;
+		if (desc == null) {
+			if (other.desc != null)
+				return false;
+		} else if (!desc.equals(other.desc))
+			return false;
+		if (features == null) {
+			if (other.features != null)
+				return false;
+		} else if (!features.equals(other.features))
+			return false;
+		if (filmId != other.filmId)
+			return false;
+		if (langId != other.langId)
+			return false;
+		if (length != other.length)
+			return false;
+		if (Double.doubleToLongBits(rate) != Double.doubleToLongBits(other.rate))
+			return false;
+		if (rating == null) {
+			if (other.rating != null)
+				return false;
+		} else if (!rating.equals(other.rating))
+			return false;
+		if (releaseYear != other.releaseYear)
+			return false;
+		if (rentDur != other.rentDur)
+			return false;
+		if (Double.doubleToLongBits(repCost) != Double.doubleToLongBits(other.repCost))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Film id: " + id + ", Title: " + title + ", Description: " + desc + "\n" + "Released: " + releaseYear
-				+ ", Rating: " + rating + ", Features: " + features + ", Language(s): " + language + "\n" + "Cast: "
-				+ actors + "\n";
+		return "Film [filmId=" + filmId + ", title=" + title + ", desc=" + desc + ", releaseYear=" + releaseYear
+				+ ", langId=" + langId + ", rentDur=" + rentDur + ", rate=" + rate + ", length=" + length + ", repCost="
+				+ repCost + ", rating=" + rating + ", features=" + features + ", actorList=" + actorList + "]";
 	}
+
 }
