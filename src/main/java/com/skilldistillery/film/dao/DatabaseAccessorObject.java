@@ -35,7 +35,21 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
-			String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features, id, language_name) "
+//			private int filmId;
+//			private String title;
+//			private String desc;
+//			private short releaseYear;
+//			private int langId;
+//			private String langName;
+//			private int rentDur;
+//			private double rate;
+//			private int length;
+//			private double repCost;
+//			private String rating;
+//			private String features;
+//			private List<Actor> actorList;
+//			private List<Film> films;
+			String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features)"
 					+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -93,7 +107,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
-			String sql = "UPDATE actor SET first_name=?, last_name=? " + " WHERE id=?";
+			String sql = "UPDATE film SET ? " + " WHERE id=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, film.getTitle());
 			stmt.setString(2, film.getDesc());
@@ -112,7 +126,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				stmt = conn.prepareStatement(sql);
 				stmt.setInt(1, film.getFilmId());
 				updateCount = stmt.executeUpdate();
-				sql = "INSERT INTO film (film_id) VALUS = ?";
+				sql = "INSERT INTO film (film_id) VALUES = ?";
 				stmt = conn.prepareStatement(sql);
 				for (Actor actor : film.getActorList()) {
 					stmt.setInt(1, film.getFilmId());
