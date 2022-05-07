@@ -29,7 +29,6 @@
 			<li>Rental Rate: ${ film.rate }</li>
 			<li>Length: ${ film.length }</li>
 			<li>Replacement Cost: ${ film.repCost }</li>
-			<li>Rating: ${ film.rating }</li>
 		<%-- 	<li>Features: ${ film.features }</li> --%>
 		</ul>
 	</c:if>

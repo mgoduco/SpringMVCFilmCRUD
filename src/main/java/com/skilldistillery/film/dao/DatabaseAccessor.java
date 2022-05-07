@@ -8,19 +8,18 @@ import com.skilldistillery.film.entities.Film;
 
 public interface DatabaseAccessor {
 
-	public Film findFilmById(int filmId);
+	public Film findFilmById(Integer filmId);
 
 	public Film createFilm(Film film) throws SQLException;
 
 	public List<Film> findFilmByKeyword(String keyword) throws SQLException;
 
-	public List<Actor> findActorsByFilmId(int filmId);
+	public List<Actor> findActorsByFilmId(Integer filmId);
 
-	public Actor findActorById(int actorId);
+	public Actor findActorById(Integer actorId);
 
 	public Film deleteFilm(Film film);
-	
-	public Film saveFilm(String title, String description, short release_year, int language_id, int rental_duration,
-			double rental_rate, int length, double replacement_cost, String rating, String special_features);
+
+	public Film saveFilm(Film film);
 
 }

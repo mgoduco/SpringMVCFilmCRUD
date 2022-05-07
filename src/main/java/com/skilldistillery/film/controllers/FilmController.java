@@ -4,8 +4,10 @@ import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,8 +25,8 @@ public class FilmController {
 		return "WEB-INF/views/home.jsp";
 	}
 
-	@RequestMapping(path = "getFilm.do", params = "filmId", method = RequestMethod.GET)
-	public ModelAndView getFilmById(int filmId) {
+	@RequestMapping(path = "getFilm.do", params = "filmId")
+	public ModelAndView getFilmById(Integer filmId) {
 		ModelAndView mv = new ModelAndView();
 		Film film = db.findFilmById(filmId);
 		mv.addObject("film", film);
@@ -37,18 +39,10 @@ public class FilmController {
 		return "WEB-INF/views/createFilm.jsp";
 	}
 
-//	@RequestMapping(path = "getFilm.do", params = "filmId", method = RequestMethod.POST)
-//	public ModelAndView createFilm() {
-//		ModelAndView mv = new ModelAndView();
-//		mv.addObject("film", film);
-//		mv.setViewName("WEB-INF/views/getFilm.jsp");
-//		return mv;
-//	}
-
-	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
-	public String createFilm(String title, String description, short release_year, int language_id, int rental_duration,
-			double rental_rate, int length, double replacement_cost, String rating, RedirectAttributes redir)
-			throws SQLException {
+	@RequestMapping(path = "createFilm.do", method = RequestMethod.GET)
+	public String createFilm(String title, String description, Integer release_year, Integer language_id,
+			Integer rental_duration, Double rental_rate, Integer length, Double replacement_cost, String rating,
+			RedirectAttributes redir) throws SQLException {
 
 		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
 				replacement_cost, rating);
@@ -58,20 +52,6 @@ public class FilmController {
 		redir.addFlashAttribute("film", film);
 		return "redirect:displayFilm.do";
 	}
-
-//	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
-//	public String createFilm(String title, String description, short release_year, int language_id, int rental_duration,
-//			double rental_rate, int length, double replacement_cost, String rating, RedirectAttributes redir)
-//					throws SQLException {
-//		
-//		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
-//				replacement_cost, rating);
-//		
-//		film = db.createFilm(film);
-//		
-//		redir.addFlashAttribute("film", film);
-//		return "redirect:displayFilm.do";
-//	}
 
 	@RequestMapping(path = "deleteFilm.do")
 	public ModelAndView deleteFilm(int id) throws SQLException {
@@ -88,18 +68,22 @@ public class FilmController {
 	}
 
 	@RequestMapping(path = "updateFilm.do", method = RequestMethod.POST)
-	public String updateFilm(String title, String description, short release_year, int language_id, int rental_duration,
-			double rental_rate, int length, double replacement_cost, String rating, String special_features,
-			RedirectAttributes redir) throws SQLException {
+	public ModelAndView updateFilm(@RequestParam("filmId")Integer filmId, Film film) throws SQLException {
+		ModelAndView mv = new ModelAndView();
 
-		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
-				replacement_cost, rating, special_features);
+		db.saveFilm(film);
 
-		film = db.saveFilm(title, description, release_year, language_id, rental_duration, rental_rate, length,
-				replacement_cost, rating, special_features);
+		mv.addObject(film);
+		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		return mv;
+	}
 
-		redir.addFlashAttribute("film", film);
-		return "redirect:updateFilm.do";
+	@RequestMapping(path = "updateFilmForm.do", method = RequestMethod.GET)
+	private ModelAndView displayFilmForm(@RequestParam("filmId") Integer filmId, Model model ) {
+		ModelAndView mv = new ModelAndView();
+		model.addAttribute("filmId", filmId);
+		mv.setViewName("WEB-INF/views/updateFilm.jsp");
+		return mv;
 	}
 
 	@RequestMapping(path = "displayFilm.do", method = RequestMethod.GET)
@@ -108,16 +92,6 @@ public class FilmController {
 		mv.setViewName("WEB-INF/views/getfilm.jsp");
 		return mv;
 	}
-
-	// TODO A user can choose to add a new film. They can enter all the properties
-	// of the film.
-	// Their input will be used to create Film object, which the DAO implementation
-	// will save in the database.
-	// If the insert fails, the user is informed of this.
-
-	// TODO When a user retrieves a film, they have the option of deleting it. If
-	// they delete the film, it is removed from the database. If the delete fails
-	// (such as, due to child records), the user is informed of this.
 
 	// TODO When a user retrieves a film, they have the option of editing it. If
 	// they choose this, all the film's current properties are displayed in a form,

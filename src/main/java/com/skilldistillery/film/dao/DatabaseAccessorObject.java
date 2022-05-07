@@ -43,7 +43,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 			stmt.setString(1, film.getTitle());
 			stmt.setString(2, film.getDesc());
-			stmt.setShort(3, film.getReleaseYear());
+			stmt.setInt(3, film.getReleaseYear());
 			stmt.setInt(4, film.getLangId());
 			stmt.setInt(5, film.getRentDur());
 			stmt.setDouble(6, film.getRate());
@@ -82,41 +82,44 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	// and assigns it to the original Film object before returning it.
 	//
 	@Override
-	public Film saveFilm(String title, String description, short release_year, int language_id, int rental_duration,
-			double rental_rate, int length, double replacement_cost, String rating, String special_features) {
+	public Film saveFilm(Film film) {
 		Connection conn = null;
-		Film filmToUpdate = new Film(title, description, release_year, language_id, rental_duration, rental_rate,
-				length, replacement_cost, rating, special_features);
 
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
-			String sql = "UPDATE film SET ? " + " WHERE id=?";
+			String sql = "UPDATE film SET title=?, description=?, release_year=?, rental_duration=?, rental_rate=?, "
+					+ "length=?, replacement_cost=?, rating=?, special_features=?  "
+					+ " WHERE id=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, filmToUpdate.getTitle());
-			stmt.setString(2, filmToUpdate.getDesc());
-			stmt.setShort(3, filmToUpdate.getReleaseYear());
-			stmt.setInt(4, filmToUpdate.getLangId());
-			stmt.setInt(5, filmToUpdate.getRentDur());
-			stmt.setDouble(6, filmToUpdate.getRate());
-			stmt.setInt(7, filmToUpdate.getLength());
-			stmt.setDouble(8, filmToUpdate.getRepCost());
-			stmt.setString(9, filmToUpdate.getRating());
-			stmt.setString(10, filmToUpdate.getFeatures());
+			stmt.setString(1, film.getTitle());
+			stmt.setString(2, film.getDesc());
+			stmt.setInt(3, film.getReleaseYear() == null ? 0 : film.getReleaseYear());
+			stmt.setInt(4, film.getRentDur() == null ? 0 : film.getRentDur());
+			stmt.setDouble(5, film.getRate() == null ? 0 : film.getRate());
+			stmt.setInt(6, film.getLength() == null ? 0 : film.getLength());
+			stmt.setDouble(7, film.getRepCost() == null ? 0 : film.getRepCost());
+			stmt.setString(8, film.getRating());
+			stmt.setString(9, film.getFeatures());
+			stmt.setInt(10, film.getFilmId() == null ? 0 : film.getFilmId());
 			int updateCount = stmt.executeUpdate();
 			if (updateCount == 1) {
 				// Replace actor's film list
-				sql = "DELETE FROM film WHERE film_id = ?";
+//				sql = "DELETE FROM film WHERE film_id = ?";
+//				stmt = conn.prepareStatement(sql);
+//				stmt.setInt(1, film.getFilmId());
+//				updateCount = stmt.executeUpdate();
+//				sql = "INSERT INTO film (film_id) VALUES = ?";
 				stmt = conn.prepareStatement(sql);
-				stmt.setInt(1, filmToUpdate.getFilmId());
-				updateCount = stmt.executeUpdate();
-				sql = "INSERT INTO film (film_id) VALUES = ?";
-				stmt = conn.prepareStatement(sql);
-				for (Actor actor : filmToUpdate.getActorList()) {
-					stmt.setInt(1, filmToUpdate.getFilmId());
+				if (film.getActorList() != null) {
+					
+				for (Actor actor : film.getActorList()) {
+					stmt.setInt(1, film.getFilmId());
 					updateCount = stmt.executeUpdate();
 				}
+			}
 				conn.commit(); // COMMIT TRANSACTION
+				System.out.println(updateCount + "edited film");
 			}
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -130,7 +133,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			}
 			return null;
 		}
-		return filmToUpdate;
+		return film;
 	}
 
 	// Make sure your existing Film class and DAO film query methods include film.id
@@ -178,7 +181,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public Film findFilmById(int filmId) {
+	public Film findFilmById(Integer filmId) {
 		Film film = null;
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
@@ -191,12 +194,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				int id = rs.getInt("film.id");
 				String title = rs.getString("film.title");
 				String desc = rs.getString("film.description");
-				short releaseYear = rs.getShort("film.release_year");
-				int langId = rs.getInt("film.language_id");
-				int rentDur = rs.getInt("film.rental_duration");
-				double rate = rs.getDouble("film.rental_rate");
-				int length = rs.getInt("film.length");
-				double repCost = rs.getDouble("film.replacement_cost");
+				Integer releaseYear = rs.getInt("film.release_year");
+				Integer langId = rs.getInt("film.language_id");
+				Integer rentDur = rs.getInt("film.rental_duration");
+				Double rate = rs.getDouble("film.rental_rate");
+				Integer length = rs.getInt("film.length");
+				Double repCost = rs.getDouble("film.replacement_cost");
 				String rating = rs.getString("film.rating");
 				String features = rs.getString("film.special_features");
 
@@ -212,7 +215,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public Actor findActorById(int actorId) {
+	public Actor findActorById(Integer actorId) {
 		Actor actor = null;
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
@@ -236,7 +239,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public List<Actor> findActorsByFilmId(int filmId) {
+	public List<Actor> findActorsByFilmId(Integer filmId) {
 		List<Actor> actorList = new ArrayList<>();
 		Actor actor = null;
 		Connection conn = null;
@@ -281,7 +284,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setFilmId(rs.getInt("id"));
 				film.setTitle(rs.getString("title"));
 				film.setDesc(rs.getString("description"));
-				film.setReleaseYear(rs.getShort("release_year"));
+				film.setReleaseYear(rs.getInt("release_year"));
 				film.setLangId(rs.getInt("language_id"));
 				film.setRentDur(rs.getInt("rental_duration"));
 				film.setRate(rs.getDouble("rental_rate"));
