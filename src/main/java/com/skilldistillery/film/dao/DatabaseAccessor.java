@@ -12,7 +12,7 @@ public interface DatabaseAccessor {
 
 	public Film createFilm(Film film) throws SQLException;
 
-	public List<Film> findFilmByKeyword(String keyword) throws SQLException;
+	public List<Film> getFilmByKeyword(String keyword) throws SQLException;
 
 	public List<Actor> findActorsByFilmId(Integer filmId);
 

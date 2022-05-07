@@ -26,9 +26,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 	}
 
-	// Use the user's input to create a new Film object, passing it to your DAO's
-	// createFilm(), then prints the added film.
-	//
 	@Override
 	public Film createFilm(Film film) {
 		Connection conn = null;
@@ -39,8 +36,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features)"
 					+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-//			PreparedStatement stmt = conn.prepareStatement(sql);
-
 			stmt.setString(1, film.getTitle());
 			stmt.setString(2, film.getDesc());
 			stmt.setInt(3, film.getReleaseYear());
@@ -63,7 +58,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				System.err.println("Error creating film");
 				e.getErrorCode();
 			}
-//		
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 			if (conn != null) {
@@ -73,14 +67,10 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					System.err.println("Error trying to rollback");
 				}
 			}
-//			throw new RuntimeException("Error inserting film " + film);
 		}
 		return film;
 	}
 
-	// Modify createFilm() so it retrieves the ID of the newly-inserted film object,
-	// and assigns it to the original Film object before returning it.
-	//
 	@Override
 	public Film saveFilm(Film film) {
 		Connection conn = null;
@@ -89,8 +79,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
 			String sql = "UPDATE film SET title=?, description=?, release_year=?, rental_duration=?, rental_rate=?, "
-					+ "length=?, replacement_cost=?, rating=?, special_features=?  "
-					+ " WHERE id=?";
+					+ "length=?, replacement_cost=?, rating=?, special_features=?  " + " WHERE id=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, film.getTitle());
 			stmt.setString(2, film.getDesc());
@@ -104,20 +93,15 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			stmt.setInt(10, film.getFilmId() == null ? 0 : film.getFilmId());
 			int updateCount = stmt.executeUpdate();
 			if (updateCount == 1) {
-				// Replace actor's film list
-//				sql = "DELETE FROM film WHERE film_id = ?";
-//				stmt = conn.prepareStatement(sql);
-//				stmt.setInt(1, film.getFilmId());
-//				updateCount = stmt.executeUpdate();
-//				sql = "INSERT INTO film (film_id) VALUES = ?";
+
 				stmt = conn.prepareStatement(sql);
 				if (film.getActorList() != null) {
-					
-				for (Actor actor : film.getActorList()) {
-					stmt.setInt(1, film.getFilmId());
-					updateCount = stmt.executeUpdate();
+
+					for (Actor actor : film.getActorList()) {
+						stmt.setInt(1, film.getFilmId());
+						updateCount = stmt.executeUpdate();
+					}
 				}
-			}
 				conn.commit(); // COMMIT TRANSACTION
 				System.out.println(updateCount + "edited film");
 			}
@@ -136,11 +120,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return film;
 	}
 
-	// Make sure your existing Film class and DAO film query methods include film.id
-	// in their SELECTs, and include the id as an attribute in the returned Film
-	// objects.
-	//
-	// Implement deleteFilm() in your DAO that takes a Film as its parameter.
 	@Override
 	public Film deleteFilm(Film film) {
 
@@ -161,11 +140,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				System.out.println("deleted film id: " + keys.getInt(1));
 			}
 
-//			sql = "DELETE FROM film WHERE title = ?";
-//			stmt = conn.prepareStatement(sql);
-//			stmt.setInt(1, film.getFilmId());
-//			updateCount = stmt.executeUpdate();
-			conn.commit(); // COMMIT TRANSACTION
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 			if (conn != null) {
@@ -268,12 +242,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public List<Film> findFilmByKeyword(String searchWord) throws SQLException {
+	public List<Film> getFilmByKeyword(String keyword) throws SQLException {
 		Connection conn = DriverManager.getConnection(URL, user, pass);
 		String sql = "SELECT *,language.name 'language_name' FROM film JOIN language ON film.language_id = language.id WHERE film.title LIKE ? OR film.description LIKE ?";
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setString(1, "%" + searchWord + "%");
-		stmt.setString(2, "%" + searchWord + "%");
+		stmt.setString(1, "%" + keyword + "%");
+		stmt.setString(2, "%" + keyword + "%");
 		ResultSet rs = stmt.executeQuery();
 		List<Film> films = new ArrayList<Film>();
 		if (rs.next() == false) {
@@ -297,34 +271,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				films.add(film);
 			} while (rs.next());
 		}
+		System.out.println("films added to list");
 		return films;
 	}
 
 }
-//if (updateCount == 1) {
-//	ResultSet keys = stmt.getGeneratedKeys();
-//	if (keys.next()) {
-//		int newFilmId = keys.getInt(1);
-//		film.setFilmId(newFilmId);
-//		if (film.getFilms() != null && film.getFilms().size() > 0) {
-//			sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features)"
-//					+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
-//			stmt = conn.prepareStatement(sql);
-//			for (Film films : film.getFilms()) {
-//				stmt.setInt(1, films.getFilmId());
-//				stmt.setInt(2, newFilmId);
-//				updateCount = stmt.executeUpdate();
-//			}
-//		}
-//	}
-//} else {
-//	film = null;
-//}
-//
-// When a film is displayed, the user can choose to delete the film. If they
-// choose this option, the film object is passed to the DAO's deleteFilm.
-//
-
-// Test this using films you created using createFilm above - you don't need to
-// be able to delete existing films, which have child records referencing them.
-// Implement a film update operation.

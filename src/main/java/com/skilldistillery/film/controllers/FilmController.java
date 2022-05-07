@@ -1,6 +1,7 @@
 package com.skilldistillery.film.controllers;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,21 @@ public class FilmController {
 	@RequestMapping(path = { "/", "home.do" })
 	public String home() {
 		return "WEB-INF/views/home.jsp";
+	}
+
+	// CURRENT STORY
+	@RequestMapping(path = "getFilmByKeyword.do", params = "keyword")
+	public ModelAndView getFilmByKeyword(@RequestParam("keyword") String keyword, Model model) throws SQLException {
+		ModelAndView mv = new ModelAndView();
+		List<Film> films = db.getFilmByKeyword(keyword);
+		mv.addObject("films", films);
+		mv.setViewName("WEB-INF/views/getFilmByKeyword.jsp");
+		return mv;
+	}
+
+	@RequestMapping(path = { "/", "getFilmByKeywordForm.do" })
+	public String getFilmByKeyword() {
+		return "WEB-INF/views/getFilmByKeyword.jsp";
 	}
 
 	@RequestMapping(path = "getFilm.do", params = "filmId")
@@ -68,7 +84,7 @@ public class FilmController {
 	}
 
 	@RequestMapping(path = "updateFilm.do", method = RequestMethod.POST)
-	public ModelAndView updateFilm(@RequestParam("filmId")Integer filmId, Film film) throws SQLException {
+	public ModelAndView updateFilm(@RequestParam("filmId") Integer filmId, Film film) throws SQLException {
 		ModelAndView mv = new ModelAndView();
 
 		db.saveFilm(film);
@@ -79,7 +95,7 @@ public class FilmController {
 	}
 
 	@RequestMapping(path = "updateFilmForm.do", method = RequestMethod.GET)
-	private ModelAndView displayFilmForm(@RequestParam("filmId") Integer filmId, Model model ) {
+	private ModelAndView displayFilmForm(@RequestParam("filmId") Integer filmId, Model model) {
 		ModelAndView mv = new ModelAndView();
 		model.addAttribute("filmId", filmId);
 		mv.setViewName("WEB-INF/views/updateFilm.jsp");
