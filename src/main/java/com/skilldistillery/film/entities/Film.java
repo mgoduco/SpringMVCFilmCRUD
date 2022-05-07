@@ -53,22 +53,22 @@ public class Film {
 		this.features = features;
 	}
 
-	public Film(int filmId, String title, String desc, short releaseYear, int langId, int rentDur, double rate,
-			int length, double repCost, String rating, String features, List<Actor> actorList) {
-		super();
-		this.filmId = filmId;
-		this.title = title;
-		this.desc = desc;
-		this.releaseYear = releaseYear;
-		this.langId = langId;
-		this.rentDur = rentDur;
-		this.rate = rate;
-		this.length = length;
-		this.repCost = repCost;
-		this.rating = rating;
-		this.features = features;
-		this.actorList = actorList;
-	}
+//	public Film(int filmId, String title, String desc, short releaseYear, int langId, int rentDur, double rate,
+//			int length, double repCost, String rating, String features, List<Actor> actorList) {
+//		super();
+//		this.filmId = filmId;
+//		this.title = title;
+//		this.desc = desc;
+//		this.releaseYear = releaseYear;
+//		this.langId = langId;
+//		this.rentDur = rentDur;
+//		this.rate = rate;
+//		this.length = length;
+//		this.repCost = repCost;
+//		this.rating = rating;
+//		this.features = features;
+//		this.actorList = actorList;
+//	}
 
 	public List<Film> getFilms() {
 		return films;
