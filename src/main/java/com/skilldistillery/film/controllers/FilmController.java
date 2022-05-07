@@ -28,7 +28,7 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();
 		Film film = db.findFilmById(filmId);
 		mv.addObject("film", film);
-		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		mv.setViewName("WEB-INF/views/getFilm.jsp");
 		return mv;
 	}
 
@@ -47,11 +47,11 @@ public class FilmController {
 
 	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
 	public String createFilm(String title, String description, short release_year, int language_id, int rental_duration,
-			double rental_rate, int length, double replacement_cost, String rating, String special_features,
+			double rental_rate, int length, double replacement_cost, String rating,
 			RedirectAttributes redir) throws SQLException {
 
 		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
-				replacement_cost, rating, special_features);
+				replacement_cost, rating);
 
 		film = db.createFilm(film);
 
@@ -62,7 +62,7 @@ public class FilmController {
 	@RequestMapping(path = "displayFilm.do", method = RequestMethod.GET)
 	private ModelAndView displayFilm() {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		mv.setViewName("WEB-INF/views/getFilm.jsp");
 		return mv;
 	}
 

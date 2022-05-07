@@ -23,6 +23,19 @@ public class Film {
 	}
 
 	public Film(String title, String desc, short releaseYear, int langId, int rentDur, double rate, int length,
+			double repCost, String rating) {
+		super();
+		this.title = title;
+		this.desc = desc;
+		this.releaseYear = releaseYear;
+		this.langId = langId;
+		this.rentDur = rentDur;
+		this.rate = rate;
+		this.length = length;
+		this.repCost = repCost;
+		this.rating = rating;
+	}
+	public Film(String title, String desc, short releaseYear, int langId, int rentDur, double rate, int length,
 			double repCost, String rating, String features) {
 		super();
 		this.title = title;
