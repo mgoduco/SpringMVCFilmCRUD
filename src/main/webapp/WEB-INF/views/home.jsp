@@ -12,10 +12,11 @@
 
 	<div>
 		<h3>Search a film by id:</h3>
-		<form action="getfilm.do" method="get">
+		<form action="getFilm.do" method="get">
 			<label for="filmId">Film id: </label> <input type="text"
 				name="filmId"> <input type="submit" value="Search">
 		</form>
+		<br> <br> <a href="createFilmForm.do">Create New Film</a>
 	</div>
 
 </body>

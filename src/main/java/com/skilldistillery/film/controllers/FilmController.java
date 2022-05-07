@@ -1,13 +1,13 @@
 package com.skilldistillery.film.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.skilldistillery.film.dao.DatabaseAccessor;
 import com.skilldistillery.film.entities.Film;
@@ -23,14 +23,33 @@ public class FilmController {
 		return "WEB-INF/views/home.jsp";
 	}
 
-	@RequestMapping(path = "getfilm.do", params = "filmId", method = RequestMethod.GET)
+	@RequestMapping(path = "getFilm.do", params = "filmId", method = RequestMethod.GET)
 	public ModelAndView getFilmById(int filmId) {
-		List<Film> films = new ArrayList<>();
 		ModelAndView mv = new ModelAndView();
-		films.add(db.findFilmById(filmId));
-		mv.addObject("films", films);
-		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		Film film = db.findFilmById(filmId);
+		mv.addObject("film", film);
+		mv.setViewName("WEB-INF/views/getFilm.jsp");
 		return mv;
+	}
+
+	@RequestMapping(path = { "/", "createFilmForm.do" })
+	public String createFilmForm() {
+		return "WEB-INF/views/createFilm.jsp";
+	}
+
+//	@RequestMapping(path = "getFilm.do", params = "filmId", method = RequestMethod.POST)
+//	public ModelAndView createFilm() {
+//		ModelAndView mv = new ModelAndView();
+//		mv.addObject("film", film);
+//		mv.setViewName("WEB-INF/views/getFilm.jsp");
+//		return mv;
+//	}
+
+	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
+	public String createFilm(Film film, RedirectAttributes redir) throws SQLException {
+		db.createFilm(film);
+		redir.addFlashAttribute("film", film);
+		return "redirect:getFilm.do";
 	}
 
 	// TODO A user can choose to add a new film. They can enter all the properties
