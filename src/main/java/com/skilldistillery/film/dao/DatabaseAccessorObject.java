@@ -35,20 +35,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
-//			private int filmId;
-//			private String title;
-//			private String desc;
-//			private short releaseYear;
-//			private int langId;
-//			private String langName;
-//			private int rentDur;
-//			private double rate;
-//			private int length;
-//			private double repCost;
-//			private String rating;
-//			private String features;
-//			private List<Actor> actorList;
-//			private List<Film> films;
+			
 			String sql = "INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features)"
 					+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -94,7 +81,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					System.err.println("Error trying to rollback");
 				}
 			}
-			throw new RuntimeException("Error inserting film " + film);
+//			throw new RuntimeException("Error inserting film " + film);
 		}
 		return film;
 	}

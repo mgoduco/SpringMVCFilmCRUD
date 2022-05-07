@@ -13,7 +13,7 @@
 	<p>
 	<h4>Film By ID Results</h4>
 	<c:if test="${! empty film }">
-		<li>Film Id: ${film }</li>
+		<li>Film Id: ${film.filmId }</li>
 		<c:choose>
 			<c:when test="${empty film }">
 				<li>No film with that id</li>

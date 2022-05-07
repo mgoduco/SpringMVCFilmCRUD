@@ -28,7 +28,7 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();
 		Film film = db.findFilmById(filmId);
 		mv.addObject("film", film);
-		mv.setViewName("WEB-INF/views/getFilm.jsp");
+		mv.setViewName("WEB-INF/views/getfilm.jsp");
 		return mv;
 	}
 
@@ -46,10 +46,24 @@ public class FilmController {
 //	}
 
 	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
-	public String createFilm(Film film, RedirectAttributes redir) throws SQLException {
-		db.createFilm(film);
+	public String createFilm(String title, String description, short release_year, int language_id, int rental_duration,
+			double rental_rate, int length, double replacement_cost, String rating, String special_features,
+			RedirectAttributes redir) throws SQLException {
+
+		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
+				replacement_cost, rating, special_features);
+
+		film = db.createFilm(film);
+
 		redir.addFlashAttribute("film", film);
-		return "redirect:getFilm.do";
+		return "redirect:displayFilm.do";
+	}
+
+	@RequestMapping(path = "displayFilm.do", method = RequestMethod.GET)
+	private ModelAndView displayFilm() {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		return mv;
 	}
 
 	// TODO A user can choose to add a new film. They can enter all the properties
