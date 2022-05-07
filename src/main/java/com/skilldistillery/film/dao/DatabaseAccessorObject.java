@@ -56,9 +56,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				conn.commit(); // COMMIT TRANSACTION
 				System.out.println(updateCount + " added new film");
 				ResultSet rs = stmt.getGeneratedKeys();
-				while(rs.next()) {
+				while (rs.next()) {
 					System.out.println("New film: " + rs.getInt(1));
-				} 
+				}
 			} catch (SQLException e) {
 				System.err.println("Error creating film");
 				e.getErrorCode();
@@ -133,20 +133,30 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	// objects.
 	//
 	// Implement deleteFilm() in your DAO that takes a Film as its parameter.
-	public boolean deleteFilm(Film film) {
+	@Override
+	public Film deleteFilm(Film film) {
 
 		Connection conn = null;
+		Film filmToDelete = film;
+
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
 			conn.setAutoCommit(false); // START TRANSACTION
-			String sql = "DELETE FROM film WHERE film_id = ?";
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			String sql = "DELETE FROM film WHERE id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setInt(1, film.getFilmId());
 			int updateCount = stmt.executeUpdate();
-			sql = "DELETE FROM film WHERE film_id = ?";
-			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, film.getFilmId());
-			updateCount = stmt.executeUpdate();
+			System.out.println(updateCount + "deleted");
+			ResultSet keys = stmt.getGeneratedKeys();
+
+			while (keys.next()) {
+				System.out.println("deleted film id: " + keys.getInt(1));
+			}
+
+//			sql = "DELETE FROM film WHERE title = ?";
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setInt(1, film.getFilmId());
+//			updateCount = stmt.executeUpdate();
 			conn.commit(); // COMMIT TRANSACTION
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -157,9 +167,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					System.err.println("Error trying to rollback");
 				}
 			}
-			return false;
+			return null;
 		}
-		return true;
+		return filmToDelete;
 	}
 
 	@Override

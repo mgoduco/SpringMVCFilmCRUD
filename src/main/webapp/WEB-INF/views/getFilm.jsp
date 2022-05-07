@@ -36,7 +36,11 @@
 	</p>
 	<br>
 	
-	DELETE FUNCTION 
+	<form action="deleteFilm.do" method="POST">
+	<label for="id">Enter film ID to delete: </label>
+	<input type="text" name="id" value="Film to delete">
+	<input type="submit" value="Delete film">
+	</form>
 	
 	<br>
 	

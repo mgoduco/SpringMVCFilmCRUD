@@ -4,9 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>FILM DELETED</title>
 </head>
 <body>
+
+<h1>FILM DELETED</h1>
 
 </body>
 </html>

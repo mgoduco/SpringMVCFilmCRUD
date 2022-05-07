@@ -22,6 +22,10 @@ public class Film {
 
 	}
 
+	public Film(int filmId) {
+		this.filmId = filmId;
+	}
+
 	public Film(String title, String desc, short releaseYear, int langId, int rentDur, double rate, int length,
 			double repCost, String rating) {
 		super();
@@ -35,6 +39,7 @@ public class Film {
 		this.repCost = repCost;
 		this.rating = rating;
 	}
+
 	public Film(String title, String desc, short releaseYear, int langId, int rentDur, double rate, int length,
 			double repCost, String rating, String features) {
 		super();

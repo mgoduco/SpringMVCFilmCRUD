@@ -18,4 +18,6 @@ public interface DatabaseAccessor {
 
 	public Actor findActorById(int actorId);
 
+	public Film deleteFilm(Film film);
+
 }

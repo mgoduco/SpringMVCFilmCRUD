@@ -47,8 +47,8 @@ public class FilmController {
 
 	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
 	public String createFilm(String title, String description, short release_year, int language_id, int rental_duration,
-			double rental_rate, int length, double replacement_cost, String rating,
-			RedirectAttributes redir) throws SQLException {
+			double rental_rate, int length, double replacement_cost, String rating, RedirectAttributes redir)
+			throws SQLException {
 
 		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
 				replacement_cost, rating);
@@ -57,6 +57,34 @@ public class FilmController {
 
 		redir.addFlashAttribute("film", film);
 		return "redirect:displayFilm.do";
+	}
+
+//	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
+//	public String createFilm(String title, String description, short release_year, int language_id, int rental_duration,
+//			double rental_rate, int length, double replacement_cost, String rating, RedirectAttributes redir)
+//					throws SQLException {
+//		
+//		Film film = new Film(title, description, release_year, language_id, rental_duration, rental_rate, length,
+//				replacement_cost, rating);
+//		
+//		film = db.createFilm(film);
+//		
+//		redir.addFlashAttribute("film", film);
+//		return "redirect:displayFilm.do";
+//	}
+
+	@RequestMapping(path = "deleteFilm.do")
+	public ModelAndView deleteFilm(int id) throws SQLException {
+		ModelAndView mv = new ModelAndView();
+		Film localFilm = db.findFilmById(id);
+
+		if (localFilm != null) {
+			db.deleteFilm(localFilm);
+			mv.addObject(localFilm);
+		}
+
+		mv.setViewName("WEB-INF/views/deleteFilm.jsp");
+		return mv;
 	}
 
 	@RequestMapping(path = "displayFilm.do", method = RequestMethod.GET)

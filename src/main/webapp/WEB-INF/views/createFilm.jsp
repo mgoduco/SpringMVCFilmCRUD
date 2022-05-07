@@ -11,6 +11,9 @@
 	<h3>CREATE NEW FILM:</h3>
 
 	<form action="createFilm.do" method="POST">
+		
+		<input type="text" hidden="true" name="id" value="${film.id }">
+		
 		<label for="title">Title of Film:</label> <input type="text"
 			name="title" value="your film name"> <br> <label
 			for="description">Description of Film:</label> <input type="text"
