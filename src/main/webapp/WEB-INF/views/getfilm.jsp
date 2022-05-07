@@ -33,6 +33,11 @@
 		</ul>
 	</c:if>
 	</p>
+	
+	<h3>Delete this film from the database</h3>
+	<input type="submit" value="">
+	
+	<br>
 	<a href="home.do">Return to Main Menu</a>
 
 </body>

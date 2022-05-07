@@ -55,10 +55,6 @@
 	<li>Rating: ${ film.rating }</li>
 	<li>Features: ${ film.features }</li>
 
-
-
-
-
 	<a href="home.do">Return to Main Menu</a>
 
 </body>
