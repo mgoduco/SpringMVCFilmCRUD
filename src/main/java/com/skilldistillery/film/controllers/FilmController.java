@@ -16,4 +16,7 @@ public class FilmController {
 	public String home() {
 		return "WEB-INF/views/home.jsp";
 	}
+	
+//	@RequestMapping()
+	
 }
