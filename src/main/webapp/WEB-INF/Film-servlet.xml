@@ -11,7 +11,8 @@
 		base-package="com.skilldistillery.film" />
 
 	<mvc:annotation-driven />
-	
-	<bean id="dao" class="com.skilldistillery.film.dao.DatabaseAccessorObject"></bean>
-	
+
+	<bean id="dao"
+		class="com.skilldistillery.film.dao.DatabaseAccessorObject"></bean>
+	<bean id="film" class="com.skilldistillery.film.entities.Film"></bean>
 </beans>

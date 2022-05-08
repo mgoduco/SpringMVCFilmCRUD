@@ -104,6 +104,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				}
 				conn.commit(); // COMMIT TRANSACTION
 				System.out.println(updateCount + "edited film");
+			} else {
+				System.out.println("error editing film");
 			}
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -139,7 +141,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			while (keys.next()) {
 				System.out.println("deleted film id: " + keys.getInt(1));
 			}
-
+			conn.commit();
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 			if (conn != null) {

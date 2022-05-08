@@ -27,10 +27,12 @@ public class FilmController {
 	}
 
 	// CURRENT STORY
-	@RequestMapping(path = "getFilmByKeyword.do", params = "keyword")
-	public ModelAndView getFilmByKeyword(@RequestParam("keyword") String keyword, Model model) throws SQLException {
+	@RequestMapping(path = "getFilmByKeyword.do", params = "keyword", method = RequestMethod.GET)
+	public ModelAndView getFilmByKeyword(String keyword) throws SQLException {
+		System.out.println("GET FILM BY KEYWORD MAPPING TEST");
 		ModelAndView mv = new ModelAndView();
 		List<Film> films = db.getFilmByKeyword(keyword);
+		
 		mv.addObject("films", films);
 		mv.setViewName("WEB-INF/views/getFilmByKeyword.jsp");
 		return mv;
@@ -46,7 +48,7 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();
 		Film film = db.findFilmById(filmId);
 		mv.addObject("film", film);
-		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		mv.setViewName("WEB-INF/views/getFilm.jsp");
 		return mv;
 	}
 
@@ -55,7 +57,7 @@ public class FilmController {
 		return "WEB-INF/views/createFilm.jsp";
 	}
 
-	@RequestMapping(path = "createFilm.do", method = RequestMethod.GET)
+	@RequestMapping(path = "createFilm.do", method = RequestMethod.POST)
 	public String createFilm(String title, String description, Integer release_year, Integer language_id,
 			Integer rental_duration, Double rental_rate, Integer length, Double replacement_cost, String rating,
 			RedirectAttributes redir) throws SQLException {
@@ -69,16 +71,19 @@ public class FilmController {
 		return "redirect:displayFilm.do";
 	}
 
-	@RequestMapping(path = "deleteFilm.do")
-	public ModelAndView deleteFilm(int id) throws SQLException {
+	@RequestMapping(path = "deleteFilm.do", params = "filmId")
+	public ModelAndView deleteFilm(int filmId) throws SQLException {
 		ModelAndView mv = new ModelAndView();
-		Film localFilm = db.findFilmById(id);
+		Film localFilm = db.findFilmById(filmId);
 
 		if (localFilm != null) {
-			db.deleteFilm(localFilm);
+			Film deletedFilm = db.deleteFilm(localFilm);
 			mv.addObject(localFilm);
+			
+			if (deletedFilm == null) {
+			}
 		}
-
+		
 		mv.setViewName("WEB-INF/views/deleteFilm.jsp");
 		return mv;
 	}
@@ -90,7 +95,7 @@ public class FilmController {
 		db.saveFilm(film);
 
 		mv.addObject(film);
-		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		mv.setViewName("WEB-INF/views/getFilm.jsp");
 		return mv;
 	}
 
@@ -105,15 +110,9 @@ public class FilmController {
 	@RequestMapping(path = "displayFilm.do", method = RequestMethod.GET)
 	private ModelAndView displayFilm() {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("WEB-INF/views/getfilm.jsp");
+		mv.setViewName("WEB-INF/views/getFilm.jsp");
 		return mv;
 	}
-
-	// TODO When a user retrieves a film, they have the option of editing it. If
-	// they choose this, all the film's current properties are displayed in a form,
-	// allowing them to change any property except the film's ID. When they submit
-	// the form, that film's record is updated in the database. If the update fails,
-	// the user is informed of this.
 
 	// TODO A user can search for films by keyword/pattern in title or description.
 	// From the resulting list of films, the user can choose to update or delete a

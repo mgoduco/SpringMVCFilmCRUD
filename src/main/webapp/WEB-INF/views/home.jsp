@@ -27,15 +27,14 @@
 		<h3>Find a list of films by keyword</h3>
 
 
-	<form action="getFilmByKeywordForm.do" method="get">
+	<form action="getFilmByKeyword.do" method="get">
 	<label for="keyword">Enter search term: </label>
-	<input type="text" name="keyword" value="Search term...">
+	<input type="text" name="keyword" placeholder="Search term...">
 	<input type="submit" value="Search term">
 	</form>
 	
 	<br>	
 	<br>	
-		<h3>Create a new film</h3>
 		<br> <br> <a href="createFilmForm.do">Create New Film</a>
 	</div>
 
