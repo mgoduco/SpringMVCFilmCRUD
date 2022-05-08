@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.skilldistillery.film.dao.DatabaseAccessor;
+import com.skilldistillery.film.entities.Actor;
 import com.skilldistillery.film.entities.Film;
 
 @Controller
@@ -49,6 +50,9 @@ public class FilmController {
 		Film film = db.findFilmById(filmId);
 		mv.addObject("film", film);
 		mv.setViewName("WEB-INF/views/getFilm.jsp");
+		for (Actor actor : film.getActorList()) {
+			System.out.println(actor.getFirstName());
+		}
 		return mv;
 	}
 

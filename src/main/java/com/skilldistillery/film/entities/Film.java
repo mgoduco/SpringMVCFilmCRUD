@@ -148,6 +148,25 @@ public class Film {
 		this.features = features;
 	}
 
+	
+	
+	public Film(Integer filmId, String title, String desc, Integer releaseYear, Integer langId, Integer rentDur,
+			Double rate, Integer length, Double repCost, String rating, String features, List<Actor> actorList) {
+		super();
+		this.filmId = filmId;
+		this.title = title;
+		this.desc = desc;
+		this.releaseYear = releaseYear;
+		this.langId = langId;
+		this.rentDur = rentDur;
+		this.rate = rate;
+		this.length = length;
+		this.repCost = repCost;
+		this.rating = rating;
+		this.features = features;
+		this.actorList = actorList;
+	}
+
 	public Integer getFilmId() {
 		return filmId;
 	}

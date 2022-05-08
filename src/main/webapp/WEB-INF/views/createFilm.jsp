@@ -12,7 +12,7 @@
 
 	<form action="createFilm.do" method="POST">
 		
-		<input type="text" hidden="true" name="id" value="${film.filmId }">
+		<input type="text" hidden="false" name="id" value="${film.filmId }">
 		
 		<label for="title">Title of Film:</label> 
 		<input type="text"
