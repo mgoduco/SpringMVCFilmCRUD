@@ -33,7 +33,7 @@ public class FilmController {
 		System.out.println("GET FILM BY KEYWORD MAPPING TEST");
 		ModelAndView mv = new ModelAndView();
 		List<Film> films = db.getFilmByKeyword(keyword);
-		
+
 		mv.addObject("films", films);
 		mv.setViewName("WEB-INF/views/getFilmByKeyword.jsp");
 		return mv;
@@ -49,9 +49,10 @@ public class FilmController {
 		ModelAndView mv = new ModelAndView();
 		Film film = db.findFilmById(filmId);
 		mv.addObject("film", film);
-		mv.setViewName("WEB-INF/views/getFilm.jsp");
-		for (Actor actor : film.getActorList()) {
-			System.out.println(actor.getFirstName());
+		if (film == null) {
+			mv.setViewName("WEB-INF/views/error.jsp");
+		} else {
+			mv.setViewName("WEB-INF/views/getFilm.jsp");
 		}
 		return mv;
 	}
@@ -83,11 +84,13 @@ public class FilmController {
 		if (localFilm != null) {
 			Film deletedFilm = db.deleteFilm(localFilm);
 			mv.addObject(localFilm);
-			
+
 			if (deletedFilm == null) {
+				mv.setViewName("WEB-INF/views/error.jsp");
+				return mv;
 			}
 		}
-		
+
 		mv.setViewName("WEB-INF/views/deleteFilm.jsp");
 		return mv;
 	}
